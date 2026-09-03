@@ -34,7 +34,7 @@ const Dashboard = () => {
                         <div className="card">
                             <div className="card-body">
                                 <span className="h5">
-                                    <CurrencyFormat value={ExpenseTotal} displayType={'text'} thousandSeparator={true} prefix={'$'} />
+                                    <CurrencyFormat value={ExpenseTotal} displayType={'text'} thousandSeparator={true} prefix={'৳'} />
                                 </span>
                                 <p>Total Expense</p>
                             </div>
@@ -44,7 +44,7 @@ const Dashboard = () => {
                         <div className="card">
                             <div className="card-body">
                                <span className="h5">
-                                    <CurrencyFormat value={SaleTotal} displayType={'text'} thousandSeparator={true} prefix={'$'} />
+                                    <CurrencyFormat value={SaleTotal} displayType={'text'} thousandSeparator={true} prefix={'৳'} />
                                 </span>
                                 <p>Total Sale</p>
                             </div>
@@ -54,7 +54,7 @@ const Dashboard = () => {
                         <div className="card">
                             <div className="card-body">
                                <span className="h5">
-                                    <CurrencyFormat value={PurchaseTotal} displayType={'text'} thousandSeparator={true} prefix={'$'} />
+                                    <CurrencyFormat value={PurchaseTotal} displayType={'text'} thousandSeparator={true} prefix={'৳'} />
                                 </span>
                                 <p>Total Purchase</p>
                             </div>
@@ -64,7 +64,7 @@ const Dashboard = () => {
                         <div className="card">
                             <div className="card-body">
                                <span className="h5">
-                                    <CurrencyFormat value={ReturnTotal} displayType={'text'} thousandSeparator={true} prefix={'$'} />
+                                    <CurrencyFormat value={ReturnTotal} displayType={'text'} thousandSeparator={true} prefix={'৳'} />
                                 </span>
                                 <p>Total Return</p>
                             </div>
