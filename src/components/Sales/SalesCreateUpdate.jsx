@@ -2,15 +2,16 @@ import {Fragment, useEffect, useRef} from 'react';
 import {CreateSaleRequest, CustomerDropDownRequest, ProductDropDownRequest} from "../../APIRequest/SaleAPIRequest";
 import {useSelector} from "react-redux";
 import {BsCartCheck, BsTrash} from "react-icons/bs";
-import {ErrorToast, IsEmpty} from "../../helper/FormHelper";
+import {ErrorToast, IsEmpty, SuccessToast} from "../../helper/FormHelper";
 import store from "../../redux/store/store";
-import {OnChangeSaleInput, RemoveSaleItem, SetSaleItemList} from "../../redux/state-slice/sale-slice";
+import {OnChangeSaleInput, RemoveSaleItem, SetSaleItemList, ResetSaleForm} from "../../redux/state-slice/sale-slice";
 
 
 
 const SalesCreateUpdate = () => {
 
     let productRef,qtyRef,unitPriceRef=useRef();
+    const formRef=useRef(null);
 
     useEffect(()=>{
         (async () => {
@@ -49,6 +50,7 @@ const SalesCreateUpdate = () => {
                "Total":(parseInt(qtyValue))*(parseInt(unitPriceValue))
                }
            store.dispatch(SetSaleItemList(item))
+           SuccessToast("Product added to cart")
        }
 
     }
@@ -56,13 +58,22 @@ const SalesCreateUpdate = () => {
 
     const removeCart = (i) => {
         store.dispatch(RemoveSaleItem(i))
+        SuccessToast("Item removed from cart")
     }
 
 
     const CreateNewSale=async () => {
         // Apply Validation
        let res= await CreateSaleRequest(SaleFormValue, SaleItemList);
-       alert(res);
+       if(res) {
+           store.dispatch(ResetSaleForm());
+           if(formRef.current) {
+               formRef.current.reset();
+           }
+           if(productRef) productRef.value="";
+           if(qtyRef) qtyRef.value="";
+           if(unitPriceRef) unitPriceRef.value="";
+       }
     }
 
 
@@ -70,7 +81,7 @@ const SalesCreateUpdate = () => {
 
     return (
         <Fragment>
-            <div className="container-fluid">
+            <form ref={formRef} className="container-fluid">
                 <div className="row">
                     <div className="col-12 col-md-4 col-lg-4 mb-3">
                         <div className="card h-100">
@@ -125,7 +136,7 @@ const SalesCreateUpdate = () => {
                                 </div>
                                 <div className="row">
                                     <div className="col-4 p-2">
-                                        <button onClick={CreateNewSale} className="btn btn-sm my-3 btn-success">Create</button>
+                                        <button type="button" onClick={CreateNewSale} className="btn btn-sm my-3 btn-success">Create</button>
                                     </div>
                                 </div>
                             </div>
@@ -157,7 +168,7 @@ const SalesCreateUpdate = () => {
                                     </div>
                                     <div className="col-2 p-1">
                                         <label className="form-label">Add to cart</label>
-                                        <button onClick={OnAddCart} className="btn w-100 btn-success btn-sm"><BsCartCheck/></button>
+                                        <button type="button" onClick={OnAddCart} className="btn w-100 btn-success btn-sm"><BsCartCheck/></button>
                                     </div>
                                 </div>
 
@@ -184,7 +195,7 @@ const SalesCreateUpdate = () => {
                                                            <td>{item.Qty}</td>
                                                            <td>{item.UnitCost}</td>
                                                            <td>{item.Total}</td>
-                                                           <td><button onClick={removeCart.bind(this,i)} className="btn btn-outline-light text-danger p-2 mb-0 btn-sm ms-2"><BsTrash/></button></td>
+                                                           <td><button type="button" onClick={removeCart.bind(this,i)} className="btn btn-outline-light text-danger p-2 mb-0 btn-sm ms-2"><BsTrash/></button></td>
                                                        </tr>
                                                    )
                                                 })
@@ -200,7 +211,7 @@ const SalesCreateUpdate = () => {
                         </div>
                     </div>
                 </div>
-            </div>
+            </form>
         </Fragment>
     );
 };
