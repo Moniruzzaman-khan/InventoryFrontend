@@ -39,6 +39,18 @@ export const returnSlice=createSlice({
         RemoveReturnItem:(state,action)=>{
             state.ReturnItemList.splice(action.payload,1)
         },
+        ResetReturnForm:(state)=>{
+            state.ReturnFormValue={
+                CustomerID:"",
+                VatTax:"",
+                Discount:"",
+                OtherCost:"",
+                ShippingCost:"",
+                GrandTotal:"",
+                Note:"",
+            };
+            state.ReturnItemList=[];
+        },
     }
 })
 
@@ -50,5 +62,6 @@ export  const {
     OnChangeReturnInput,
     SetReturnItemList,
     RemoveReturnItem,
+    ResetReturnForm,
 }=returnSlice.actions;
 export default  returnSlice.reducer;
