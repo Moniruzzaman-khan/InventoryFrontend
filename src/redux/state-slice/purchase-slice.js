@@ -39,6 +39,18 @@ export const purchaseSlice=createSlice({
         RemovePurchaseItem:(state,action)=>{
             state.PurchaseItemList.splice(action.payload,1)
         },
+        ResetPurchaseForm:(state)=>{
+            state.PurchaseFormValue={
+                SupplierID:"",
+                VatTax:"",
+                Discount:"",
+                OtherCost:"",
+                ShippingCost:"",
+                GrandTotal:"",
+                Note:"",
+            };
+            state.PurchaseItemList=[];
+        },
     }
 })
 
@@ -49,6 +61,7 @@ export  const {
     SetProductDropDown,
     OnChangePurchaseInput,
     SetPurchaseItemList,
-    RemovePurchaseItem
+    RemovePurchaseItem,
+    ResetPurchaseForm
 }=purchaseSlice.actions;
 export default  purchaseSlice.reducer;
