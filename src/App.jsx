@@ -35,6 +35,7 @@ import SendOTPPage from "./pages/Users/SendOTPPage.jsx";
 import VerifyOTPPage from "./pages/Users/VerifyOTPPage.jsx";
 import CreatePasswordPage from "./pages/Users/CreatePasswordPage.jsx";
 import 'react-toastify/dist/ReactToastify.css';
+import {ToastContainer} from 'react-toastify';
 const App = () => {
   if(getToken()){
     return (
@@ -81,6 +82,7 @@ const App = () => {
               <Route path="*" element={<Page404/>}/>
             </Routes>
           </BrowserRouter>
+          <ToastContainer />
           <FullscreenLoader/>
         </Fragment>
     );
@@ -99,6 +101,7 @@ const App = () => {
               <Route path="*" element={<Page404/>}/>
             </Routes>
           </BrowserRouter>
+          <ToastContainer />
           <FullscreenLoader/>
         </Fragment>
     );
