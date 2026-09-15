@@ -1,15 +1,16 @@
 import {Fragment, useEffect, useRef} from 'react';
 import {useSelector} from "react-redux";
 import {BsCartCheck, BsTrash} from "react-icons/bs";
-import {ErrorToast, IsEmpty} from "../../helper/FormHelper";
+import {ErrorToast, IsEmpty, SuccessToast} from "../../helper/FormHelper";
 import store from "../../redux/store/store";
-import {OnChangePurchaseInput, RemovePurchaseItem, SetPurchaseItemList} from "../../redux/state-slice/purchase-slice";
+import {OnChangePurchaseInput, RemovePurchaseItem, SetPurchaseItemList, ResetPurchaseForm} from "../../redux/state-slice/purchase-slice";
 import {CreatePurchaseRequest, ProductDropDownRequest, SupplierDropDownRequest} from "../../APIRequest/PurchaseAPIRequest";
 
 
 const PurchaseCreateUpdate = () => {
 
     let productRef,qtyRef,unitPriceRef=useRef();
+    const formRef=useRef(null);
 
     useEffect(()=>{
         (async () => {
@@ -48,6 +49,7 @@ const PurchaseCreateUpdate = () => {
                 "Total":(parseInt(qtyValue))*(parseInt(unitPriceValue))
             }
             store.dispatch(SetPurchaseItemList(item))
+            SuccessToast("Product added to cart")
         }
 
     }
@@ -55,13 +57,21 @@ const PurchaseCreateUpdate = () => {
 
     const removeCart = (i) => {
         store.dispatch(RemovePurchaseItem(i))
+        SuccessToast("Item removed from cart")
     }
 
 
     const CreateNewPurchase=async () => {
-        // Apply Validation
         let res= await CreatePurchaseRequest(PurchaseFormValue, PurchaseItemList);
-        alert(res);
+        if(res) {
+            store.dispatch(ResetPurchaseForm());
+            if(formRef.current) {
+                formRef.current.reset();
+            }
+            if(productRef) productRef.value="";
+            if(qtyRef) qtyRef.value="";
+            if(unitPriceRef) unitPriceRef.value="";
+        }
     }
 
 
@@ -69,7 +79,7 @@ const PurchaseCreateUpdate = () => {
 
     return (
         <Fragment>
-            <div className="container-fluid">
+            <form ref={formRef} className="container-fluid">
                 <div className="row">
                     <div className="col-12 col-md-4 col-lg-4 mb-3">
                         <div className="card h-100">
@@ -124,7 +134,7 @@ const PurchaseCreateUpdate = () => {
                                 </div>
                                 <div className="row">
                                     <div className="col-4 p-2">
-                                        <button onClick={CreateNewPurchase} className="btn btn-sm my-3 btn-success">Create</button>
+                                        <button type="button" onClick={CreateNewPurchase} className="btn btn-sm my-3 btn-success">Create</button>
                                     </div>
                                 </div>
                             </div>
@@ -156,7 +166,7 @@ const PurchaseCreateUpdate = () => {
                                     </div>
                                     <div className="col-2 p-1">
                                         <label className="form-label">Add to cart</label>
-                                        <button onClick={OnAddCart} className="btn w-100 btn-success btn-sm"><BsCartCheck/></button>
+                                        <button type="button" onClick={OnAddCart} className="btn w-100 btn-success btn-sm"><BsCartCheck/></button>
                                     </div>
                                 </div>
 
@@ -183,7 +193,7 @@ const PurchaseCreateUpdate = () => {
                                                                 <td>{item.Qty}</td>
                                                                 <td>{item.UnitCost}</td>
                                                                 <td>{item.Total}</td>
-                                                                <td><button onClick={removeCart.bind(this,i)} className="btn btn-outline-light text-danger p-2 mb-0 btn-sm ms-2"><BsTrash/></button></td>
+                                                                <td><button type="button" onClick={removeCart.bind(this,i)} className="btn btn-outline-light text-danger p-2 mb-0 btn-sm ms-2"><BsTrash/></button></td>
                                                             </tr>
                                                         )
                                                     })
@@ -199,7 +209,7 @@ const PurchaseCreateUpdate = () => {
                         </div>
                     </div>
                 </div>
-            </div>
+            </form>
         </Fragment>
     );
 };
