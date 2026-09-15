@@ -6,14 +6,15 @@ import {
 } from "../../APIRequest/ReturnAPIRequest";
 import {useSelector} from "react-redux";
 import {BsCartCheck, BsTrash} from "react-icons/bs";
-import {ErrorToast, IsEmpty} from "../../helper/FormHelper";
+import {ErrorToast, IsEmpty, SuccessToast} from "../../helper/FormHelper";
 import store from "../../redux/store/store";
-import {OnChangeReturnInput, RemoveReturnItem, SetReturnItemList} from "../../redux/state-slice/return-slice";
+import {OnChangeReturnInput, RemoveReturnItem, SetReturnItemList, ResetReturnForm} from "../../redux/state-slice/return-slice";
 
 
 const ReturnCreateUpdate = () => {
 
     let productRef,qtyRef,unitPriceRef=useRef();
+    const formRef=useRef(null);
 
     useEffect(()=>{
         (async () => {
@@ -52,6 +53,7 @@ const ReturnCreateUpdate = () => {
                 "Total":(parseInt(qtyValue))*(parseInt(unitPriceValue))
             }
             store.dispatch(SetReturnItemList(item))
+            SuccessToast("Product added to return list")
         }
 
     }
@@ -59,13 +61,21 @@ const ReturnCreateUpdate = () => {
 
     const removeCart = (i) => {
         store.dispatch(RemoveReturnItem(i))
+        SuccessToast("Item removed from return list")
     }
 
 
     const CreateNewReturn=async () => {
-        // Apply Validation
         let res= await CreateReturnRequest(ReturnFormValue, ReturnItemList);
-        alert(res);
+        if(res) {
+            store.dispatch(ResetReturnForm());
+            if(formRef.current) {
+                formRef.current.reset();
+            }
+            if(productRef) productRef.value="";
+            if(qtyRef) qtyRef.value="";
+            if(unitPriceRef) unitPriceRef.value="";
+        }
     }
 
 
@@ -73,7 +83,7 @@ const ReturnCreateUpdate = () => {
 
     return (
         <Fragment>
-            <div className="container-fluid">
+            <form ref={formRef} className="container-fluid">
                 <div className="row">
                     <div className="col-12 col-md-4 col-lg-4 mb-3">
                         <div className="card h-100">
@@ -128,7 +138,7 @@ const ReturnCreateUpdate = () => {
                                 </div>
                                 <div className="row">
                                     <div className="col-4 p-2">
-                                        <button onClick={CreateNewReturn} className="btn btn-sm my-3 btn-success">Create</button>
+                                        <button type="button" onClick={CreateNewReturn} className="btn btn-sm my-3 btn-success">Create</button>
                                     </div>
                                 </div>
                             </div>
@@ -160,7 +170,7 @@ const ReturnCreateUpdate = () => {
                                     </div>
                                     <div className="col-2 p-1">
                                         <label className="form-label">Add to cart</label>
-                                        <button onClick={OnAddCart} className="btn w-100 btn-success btn-sm"><BsCartCheck/></button>
+                                        <button type="button" onClick={OnAddCart} className="btn w-100 btn-success btn-sm"><BsCartCheck/></button>
                                     </div>
                                 </div>
 
@@ -187,7 +197,7 @@ const ReturnCreateUpdate = () => {
                                                                 <td>{item.Qty}</td>
                                                                 <td>{item.UnitCost}</td>
                                                                 <td>{item.Total}</td>
-                                                                <td><button onClick={removeCart.bind(this,i)} className="btn btn-outline-light text-danger p-2 mb-0 btn-sm ms-2"><BsTrash/></button></td>
+                                                                <td><button type="button" onClick={removeCart.bind(this,i)} className="btn btn-outline-light text-danger p-2 mb-0 btn-sm ms-2"><BsTrash/></button></td>
                                                             </tr>
                                                         )
                                                     })
@@ -203,7 +213,7 @@ const ReturnCreateUpdate = () => {
                         </div>
                     </div>
                 </div>
-            </div>
+            </form>
         </Fragment>
     );
 };
