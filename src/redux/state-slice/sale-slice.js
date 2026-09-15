@@ -39,8 +39,20 @@ export const saleSlice=createSlice({
         RemoveSaleItem:(state,action)=>{
             state.SaleItemList.splice(action.payload,1)
         },
+        ResetSaleForm:(state)=>{
+            state.SaleFormValue={
+                CustomerID:"",
+                VatTax:"",
+                Discount:"",
+                OtherCost:"",
+                ShippingCost:"",
+                GrandTotal:"",
+                Note:"",
+            };
+            state.SaleItemList=[];
+        },
     }
 })
 
-export  const {RemoveSaleItem,SetSaleList,SetProductDropDown,SetSaleItemList,SetSaleListTotal,SetCustomerDropDown,OnChangeSaleInput}=saleSlice.actions;
+export  const {RemoveSaleItem,SetSaleList,SetProductDropDown,SetSaleItemList,SetSaleListTotal,SetCustomerDropDown,OnChangeSaleInput,ResetSaleForm}=saleSlice.actions;
 export default  saleSlice.reducer;
